@@ -29,13 +29,12 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO return filtered list with excess. Implement by cycles
 
         List<UserMealWithExcess> result = new ArrayList<>();
         Map<LocalDate, Integer> sumCaloriesMap = new HashMap<>();
 
-        // в sumCaloriesMap пишу сумму калорий по каждому дню,
-        // чтобы при добавлении записи сразу проставлять excess флаг
+        // to sumCaloriesMap write summ calories by day,
+        // so that when adding an entry, you can immediately set the excess flag
         meals.forEach(item -> {
             if (item.getDateTime().toLocalTime().compareTo(startTime) >= 0
                     && item.getDateTime().toLocalTime().compareTo(endTime) <= 0) {
@@ -47,36 +46,37 @@ public class UserMealsUtil {
             }
         });
 
-        // основной цикл для получения фильтрованного списка
+
+        // main cycle for get filtered cycle
         meals.forEach(item -> {
             if (item.getCalories() > caloriesPerDay) {
 
-                //добавляем сразу запись, где идет избыток дневных калорий
-                result.add(new UserMealWithExcess(LocalDateTime.of(item.getDateTime().toLocalDate(),item.getDateTime().toLocalTime()),
+                // immediately add a record where there is an excess of daily calories
+                result.add(new UserMealWithExcess(LocalDateTime.of(item.getDateTime().toLocalDate(), item.getDateTime().toLocalTime()),
                         item.getDescription(),
                         item.getCalories(),
                         true));
             } else {
 
-                //фильтруем записи по временному промежутку
+                // filtering records by time interval
                 if (item.getDateTime().toLocalTime().compareTo(startTime) >= 0
                         && item.getDateTime().toLocalTime().compareTo(endTime) <= 0) {
 
-                    // проверяем суммарное за день потребление калорий
+                    // check the total daily calorie intake
                     if (sumCaloriesMap.get(item.getDateTime().toLocalDate()) > caloriesPerDay) {
-                        result.add(new UserMealWithExcess(LocalDateTime.of(item.getDateTime().toLocalDate(),item.getDateTime().toLocalTime()),
+                        result.add(new UserMealWithExcess(LocalDateTime.of(item.getDateTime().toLocalDate(), item.getDateTime().toLocalTime()),
                                 item.getDescription(),
                                 item.getCalories(),
                                 true));
                     } else {
-                        result.add(new UserMealWithExcess(LocalDateTime.of(item.getDateTime().toLocalDate(),item.getDateTime().toLocalTime()),
+                        result.add(new UserMealWithExcess(LocalDateTime.of(item.getDateTime().toLocalDate(), item.getDateTime().toLocalTime()),
                                 item.getDescription(),
                                 item.getCalories(),
                                 false));
                     }
                 }
             }
-        }); 
+        });
         return result;
     }
 
