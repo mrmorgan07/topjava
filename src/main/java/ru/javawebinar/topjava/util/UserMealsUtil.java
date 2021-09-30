@@ -29,50 +29,33 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+        Map<LocalDate, Integer> sumCaloriesPerDayMap = new HashMap<>();
 
-        List<UserMealWithExcess> result = new ArrayList<>();
-        Map<LocalDate, Integer> sumCaloriesMap = new HashMap<>();
-
-        // to sumCaloriesMap write summ calories by day,
-        // so that when adding an entry, you can immediately set the excess flag
-        meals.forEach(item -> {
-            if (item.getDateTime().toLocalTime().compareTo(startTime) >= 0
-                    && item.getDateTime().toLocalTime().compareTo(endTime) <= 0) {
-                if (sumCaloriesMap.containsKey(item.getDateTime().toLocalDate())) {
-                    sumCaloriesMap.put(item.getDateTime().toLocalDate(), sumCaloriesMap.get(item.getDateTime().toLocalDate()) + item.getCalories());
-                } else {
-                    sumCaloriesMap.put(item.getDateTime().toLocalDate(), item.getCalories());
-                }
-            }
+        // create map with sum calories per day
+        meals.forEach(meal -> {
+            sumCaloriesPerDayMap.put(meal.getDateTime().toLocalDate(),
+                    sumCaloriesPerDayMap.getOrDefault(meal.getDateTime().toLocalDate(), 0) + meal.getCalories());
         });
 
-
-        // main cycle for get filtered cycle
-        meals.forEach(item -> {
-            if (item.getCalories() > caloriesPerDay) {
+        List<UserMealWithExcess> result = new ArrayList<>();
+        meals.forEach(meal -> {
+            if (meal.getCalories() > caloriesPerDay) {
 
                 // immediately add a record where there is an excess of daily calories
-                result.add(new UserMealWithExcess(LocalDateTime.of(item.getDateTime().toLocalDate(), item.getDateTime().toLocalTime()),
-                        item.getDescription(),
-                        item.getCalories(),
-                        true));
+                result.add(new UserMealWithExcess(LocalDateTime.of(meal.getDateTime().toLocalDate(),
+                        meal.getDateTime().toLocalTime()), meal.getDescription(), meal.getCalories(), true));
             } else {
 
                 // filtering records by time interval
-                if (item.getDateTime().toLocalTime().compareTo(startTime) >= 0
-                        && item.getDateTime().toLocalTime().compareTo(endTime) <= 0) {
+                if (TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)) {
 
                     // check the total daily calorie intake
-                    if (sumCaloriesMap.get(item.getDateTime().toLocalDate()) > caloriesPerDay) {
-                        result.add(new UserMealWithExcess(LocalDateTime.of(item.getDateTime().toLocalDate(), item.getDateTime().toLocalTime()),
-                                item.getDescription(),
-                                item.getCalories(),
-                                true));
+                    if (sumCaloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay) {
+                        result.add(new UserMealWithExcess(LocalDateTime.of(meal.getDateTime().toLocalDate(),
+                                meal.getDateTime().toLocalTime()), meal.getDescription(), meal.getCalories(), true));
                     } else {
-                        result.add(new UserMealWithExcess(LocalDateTime.of(item.getDateTime().toLocalDate(), item.getDateTime().toLocalTime()),
-                                item.getDescription(),
-                                item.getCalories(),
-                                false));
+                        result.add(new UserMealWithExcess(LocalDateTime.of(meal.getDateTime().toLocalDate(),
+                                meal.getDateTime().toLocalTime()), meal.getDescription(), meal.getCalories(), false));
                     }
                 }
             }
