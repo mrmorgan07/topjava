@@ -32,33 +32,15 @@ public class UserMealsUtil {
         Map<LocalDate, Integer> sumCaloriesPerDayMap = new HashMap<>();
 
         // create map with sum calories per day
-        meals.forEach(meal -> {
-            sumCaloriesPerDayMap.put(meal.getDateTime().toLocalDate(),
-                    sumCaloriesPerDayMap.getOrDefault(meal.getDateTime().toLocalDate(), 0) + meal.getCalories());
-        });
+        meals.forEach(meal -> sumCaloriesPerDayMap.put(meal.getDateTime().toLocalDate(),
+                sumCaloriesPerDayMap.getOrDefault(meal.getDateTime().toLocalDate(), 0) + meal.getCalories()));
 
         List<UserMealWithExcess> result = new ArrayList<>();
         meals.forEach(meal -> {
-            if (meal.getCalories() > caloriesPerDay) {
-
-                // immediately add a record where there is an excess of daily calories
+            if (TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime))
                 result.add(new UserMealWithExcess(LocalDateTime.of(meal.getDateTime().toLocalDate(),
-                        meal.getDateTime().toLocalTime()), meal.getDescription(), meal.getCalories(), true));
-            } else {
-
-                // filtering records by time interval
-                if (TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)) {
-
-                    // check the total daily calorie intake
-                    if (sumCaloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay) {
-                        result.add(new UserMealWithExcess(LocalDateTime.of(meal.getDateTime().toLocalDate(),
-                                meal.getDateTime().toLocalTime()), meal.getDescription(), meal.getCalories(), true));
-                    } else {
-                        result.add(new UserMealWithExcess(LocalDateTime.of(meal.getDateTime().toLocalDate(),
-                                meal.getDateTime().toLocalTime()), meal.getDescription(), meal.getCalories(), false));
-                    }
-                }
-            }
+                        meal.getDateTime().toLocalTime()), meal.getDescription(), meal.getCalories(),
+                        sumCaloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay));
         });
         return result;
     }
