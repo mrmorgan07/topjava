@@ -18,15 +18,18 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
-
+    List<Meal> meals = null;
+    @Override
+    public void init() {
+        meals = MealsUtil.initData();
+        log.debug("Load meal data");
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Meal> meals = MealsUtil.initData();
-        List<MealTo> mealsTo = MealsUtil.filteredByStreams(meals, LocalTime.of(0, 0), LocalTime.of(23, 59), MealsUtil.caloriesPerDay);
+        List<MealTo> mealsTo = MealsUtil.filteredByStreams(meals, LocalTime.of(0, 0), LocalTime.of(23, 59,59), MealsUtil.caloriesPerDay);
         request.setAttribute("mealsToList", mealsTo);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("meals.jsp");
-        requestDispatcher.forward(request,
-                response);
-        response.sendRedirect("meals.jsp");
-        }
+        requestDispatcher.forward(request,response);
+        log.debug("redirect to meals");
+    }
 }
