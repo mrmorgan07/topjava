@@ -26,6 +26,23 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+
+        switch(action == null ? "all" : action){
+            case "create":
+                break;
+
+            case "update":
+                break;
+
+            case "delete":
+                break;
+
+            default:
+                log.info("getAll");
+                request.setAttribute("users", repository.getAll());
+                request.getRequestDispatcher("/users.jsp").forward(request, response);
+        }
         log.debug("forward to users");
         request.getRequestDispatcher("/users.jsp").forward(request, response);
     }

@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
     private final Map<Integer, User> repository = new ConcurrentHashMap<>();
-    private final AtomicInteger counter = new AtomicInteger(0);
+    private final AtomicInteger mealCounter = new AtomicInteger(0);
 
     {
-        //UsersUtil.getSorteredUsers(UsersUtil.users).forEach(this::save);
-        UsersUtil.users.forEach(this::save);
+        UsersUtil.getSorteredUsers(UsersUtil.users).forEach(this::save);
+        //UsersUtil.users.forEach(this::save);
     }
     @Override
     public boolean delete(int id) {
@@ -34,7 +34,11 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public User save(User user) {
-        repository.put(user.getId(), user);
+        if (user.isNew()) {
+            user.setId(mealCounter.incrementAndGet());
+            repository.put(user.getId(), user);
+            return user;
+        }
         return repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
     }
 
