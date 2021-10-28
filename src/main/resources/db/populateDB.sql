@@ -10,6 +10,6 @@ INSERT INTO user_roles (role, user_id)
 VALUES ('USER', 100000),
        ('ADMIN', 100001);
 
-insert into meals (user_id, description, calories) VALUES (100002,'завтрак', 1000);
+insert into meals (user_id, description, calories) VALUES (100000,'завтрак', 1000);
 insert into meals (user_id, description, calories) VALUES (100001,'завтрак', 1200);
-insert into meals (user_id, description, calories) VALUES (100001,'Обед', 1200);
+insert into meals (user_id, description, calories) VALUES (100000,'Обед', 1200);
