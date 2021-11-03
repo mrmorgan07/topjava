@@ -39,11 +39,9 @@ public class MealServiceTest {
     @Rule
     public TestWatch stopwatch = new TestWatch(logger);
 
-
     @AfterClass
     public static void showTestTimeResult() {
-        TestWatch.timeMap.entrySet()
-                .forEach(System.out::println);
+        TestWatch.printResult();
     }
 
     @Test
