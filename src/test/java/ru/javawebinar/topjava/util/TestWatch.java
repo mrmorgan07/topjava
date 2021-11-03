@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TestWatch extends Stopwatch {
     private static Logger logger;
-    public static final Map<String, Long> timeMap = new LinkedHashMap<>();
+    public static final Map<String, String> timeMap = new LinkedHashMap<>();
 
     public TestWatch(Logger logger) {
         TestWatch.logger = logger;
@@ -29,11 +29,11 @@ public class TestWatch extends Stopwatch {
 
     public static void saveResult(Description description, long nanos) {
         timeMap.put(description.getMethodName(),
-                TimeUnit.NANOSECONDS.toMillis(nanos));
+                String.valueOf(TimeUnit.NANOSECONDS.toMillis(nanos)));
     }
 
     public static void printResult() {
-        timeMap.forEach((key, value) -> System.out.format("%-30s %-6o ms\n", key, value));
+        timeMap.forEach((key, value) -> System.out.format("%-30s %-6s ms\n", key, value));
     }
 
 }
