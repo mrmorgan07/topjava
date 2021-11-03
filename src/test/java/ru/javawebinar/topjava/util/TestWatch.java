@@ -24,7 +24,7 @@ public class TestWatch extends Stopwatch {
     }
 
     private static void logInfo(Description description, long nanos) {
-        logger.info(String.format("Test %s spent %d microseconds",
+        logger.info(String.format("Test %s spent %d milliseconds",
                 description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos)));
     }
 
