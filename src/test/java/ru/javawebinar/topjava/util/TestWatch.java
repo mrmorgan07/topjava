@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TestWatch extends Stopwatch {
     private static Logger logger;
-    public static final Map<String, String> timeMap = new LinkedHashMap<>();
+    private static final Map<String, String> timeMap = new LinkedHashMap<>();
 
     public TestWatch(Logger logger) {
         TestWatch.logger = logger;
@@ -33,7 +33,6 @@ public class TestWatch extends Stopwatch {
     }
 
     public static void printResult() {
-        timeMap.forEach((key, value) -> System.out.format("%-30s %-6s ms\n", key, value));
+        timeMap.forEach((key, value) -> logger.info(String.format("%-30s %-6s ms", key, value)));
     }
-
 }
