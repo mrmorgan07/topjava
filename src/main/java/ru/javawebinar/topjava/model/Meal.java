@@ -4,6 +4,7 @@ package ru.javawebinar.topjava.model;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.*;
@@ -25,18 +26,17 @@ public class Meal extends AbstractBaseEntity {
     public static final String ALL = "Meal.getAll";
     public static final String BY_TIME_RANGE = "Meal.getBetweenHalfOpen";
 
-    @Column(name = "date_time", nullable = false, columnDefinition = "timestamp default now()")
+    @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)
     @Size(min = 4, max = 50)
-    @NotNull
+    @NotBlank
     private String description;
 
     @Column(name="calories", nullable=false)
     @Range(min = 1, max = 10000)
-    @NotNull
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)

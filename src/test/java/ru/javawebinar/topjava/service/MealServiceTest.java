@@ -8,7 +8,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -67,7 +66,7 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
-        MEAL_MATCHER.assertMatch(actual, MealTestData.adminMeal1);
+        MEAL_MATCHER.assertMatch(actual, adminMeal1);
     }
 
     @Test
